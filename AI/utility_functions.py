@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from Board import Board
+from board import Board
 
 
 def reward_function(state_info1, state_info2):
@@ -59,8 +59,8 @@ def play_n_games(player1, player2, num_games, move_limit):
     for j in range(num_games):
         # print(j)
         move_counter = 0
-        while not game_board.is_game_over() and move_counter < move_limit:
-            game_board.make_move(players_move.get_next_move())
+        while not game_board.check_game_finished() and move_counter < move_limit:
+            game_board.execute_move(players_move.get_next_move())
 
             move_counter = move_counter + 1
             if players_move is player1:
@@ -95,7 +95,7 @@ def play_n_games(player1, player2, num_games, move_limit):
             player1.game_completed()
             player2.game_completed()
             # game_board.print_board()
-            game_board.reset_board()
+            game_board.game_reset()
 
     return outcome_counter
 

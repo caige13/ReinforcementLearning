@@ -1,30 +1,19 @@
-from Player_interface import Player
-from AI_helper_functions import get_number_of_pieces_and_kings
-from Board import Board
+from player import Player
+from utility_functions import get_number_of_pieces_and_kings
+from board import Board
 
-class Alpha_beta(Player):
-    """
-    A class representing a checkers playing AI using Alpha-Beta pruning.
 
-    TO DO:
-    1) Be able to take in any reward function (for when not win/loss)
-    so that you can make a more robust set of training AI
-    """
+# This class is a AI learning to play checkers using Alpha-Beta pruning
+class AlphaBeta(Player):
 
-    def __init__(self, the_player_id, the_depth, the_board=None):
-        """
-        Initialize the instance variables to be stored by the AI.
-        """
-        self.board = the_board
-        self.depth = the_depth
-        self.player_id = the_player_id
+    def __init__(self, id, depth, board=None):
+        self.board = board
+        self.depth = depth
+        self.player_id = id
 
+# A class that implements the pruning algorithm to make move decisions based on the current state
     def alpha_beta(self, board, depth, alpha, beta, maximizing_player):
-        """
-        A method implementing alpha-beta pruning to decide what move to make given
-        the current board configuration.
-        """
-        if board.is_game_over():
+        if board.check_game_finished():
             if get_number_of_pieces_and_kings(board.spots, board.player_turn) == [0, 0]:
                 if maximizing_player:
                     # Using integers instead of float("inf") so it's less than float("inf") not equal to
@@ -44,9 +33,9 @@ class Alpha_beta(Player):
             if board.player_turn != maximizing_player:
                 return players_info[1] + 2 * players_info[3] - (players_info[0] + 2 * players_info[2]), None
             return players_info[0] + 2 * players_info[2] - (players_info[1] + 2 * players_info[3]), None
-        possible_moves = board.get_possible_next_moves()
+        possible_moves = board.get_moves_available()
 
-        potential_spots = board.get_potential_spots_from_moves(possible_moves)
+        potential_spots = board.get_new_game_states(possible_moves)
         desired_move_index = None
         if maximizing_player:
             v = float('-inf')
