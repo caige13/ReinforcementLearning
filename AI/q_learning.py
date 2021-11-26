@@ -1,6 +1,6 @@
-from Player_interface import Player
+from player import Player
 import random
-from AI_helper_functions import reward_function
+from utility_functions import reward_function
 import json
 from ast import literal_eval
 
@@ -225,9 +225,9 @@ class Q_Learning_AI(Player):
         self.pre_last_move_state = self.get_states_from_boards_spots([self.board.spots])[
             0]  # %%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR (1)
 
-        possible_next_moves = self.board.get_possible_next_moves()
+        possible_next_moves = self.board.get_moves_available()
         possible_next_states = self.get_states_from_boards_spots(
-            self.board.get_potential_spots_from_moves(possible_next_moves))
+            self.board.get_new_game_states(possible_next_moves))
 
         self.post_last_move_state = self.get_desired_transition_between_states(possible_next_states)[1]
 
