@@ -40,8 +40,8 @@ for j in range(NUM_TRAINING_ROUNDS):
     print("")
     PLAYER1.save_transition_information()
 
-PlotEndGameInformation(training_info, 200, "Training Information")
-PlotEndGameInformation(validation_info, NUM_VALIDATION_GAMES, "Validation Information")
+plot_end_game_information(training_info, NUM_GAMES_TO_TRAIN, "Training Information")
+plot_end_game_information(validation_info, NUM_VALIDATION_GAMES, "Validation Information")
 show()
 
 PrintOutcome(training_info)

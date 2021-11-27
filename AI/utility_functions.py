@@ -1,6 +1,6 @@
 
 import matplotlib.pyplot as plt
-from board import Board
+from board import CheckerBoard
 
 # function rewards for transitioning from one input state to the other
 def RewardFunction(state1_info, state2_info):
