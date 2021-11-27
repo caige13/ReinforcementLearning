@@ -1,28 +1,14 @@
+
+# Class represents a checkers player -> inherited by alphabeta and q learning classes
 class Player:
-    """
-    A class to be inherited by any class representing a checkers player.
-    This is used so that other functions can be written for more general use,
-    without worry of crashing (e.g. play_n_games).
+    #set the board object
+    def set_board(self, board):
+        self.board = board
 
-    NOTES:
-    1) Create set playerID method
-    """
-
-    def set_board(self, the_board):
-        """
-        Sets the Board object which is known by the AI.
-        """
-        self.board = the_board
-
+    #can be overrwritten if AI that implements this needs to be notified the game ended before wiping
     def game_completed(self):
-        """
-        Should be overridden if AI implementing this class should be notified
-        of when a game ends, before the board is wiped.
-        """
         pass
 
+    #get the AI's desired next move
     def get_next_move(self):
-        """
-        Gets the desired next move from the AI.
-        """
         pass

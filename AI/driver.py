@@ -6,8 +6,8 @@ logFile = open("LogFile.txt", "w")
 logFile.write("Starting logging: "+str(datetime.datetime.now())+"\n")
 
 from alpha_beta import AlphaBeta
-from q_learning import Q_Learning_AI
-from utility_functions import play_n_games, pretty_outcome_display, plot_end_game_information
+from q_learning import QLearningAI
+from utility_functions import PlayNGames, PrintOutcome, PlotEndGameInformation
 from matplotlib.pyplot import show
 
 parameters = {'learning_rate': [.001, .005, .1], 'discount_factor': .4, 'num_train_games': [100, 200],
@@ -75,9 +75,9 @@ plot_end_game_information(training_info, NUM_GAMES_TO_TRAIN, "Training Informati
 plot_end_game_information(validation_info, NUM_VALIDATION_GAMES, "Validation Information")
 show()
 
-pretty_outcome_display(training_info)
+PrintOutcome(training_info)
 print("")
-pretty_outcome_display(validation_info)
+PrintOutcome(validation_info)
 
 """
 
