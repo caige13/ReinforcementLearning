@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
+import datetime
 from board import CheckerBoard
 
-
+global logFile
 def reward_function(state_info1, state_info2):
     """
     Reward for transitioning from state with state_info1 to state with state_info2.
@@ -62,7 +63,6 @@ def play_n_games(player1, player2, num_games, move_limit):
         while not game_board.check_game_finished() and move_counter < move_limit:
             game_board.executeMove(players_move.get_next_move())
 
-            game_board.show_checker_board()
             move_counter = move_counter + 1
             if players_move is player1:
                 players_move = player2
@@ -100,6 +100,15 @@ def play_n_games(player1, player2, num_games, move_limit):
 
     return outcome_counter
 
+def start_logging(fileName):
+    global logFile
+    logFile = open(fileName, "w")
+    logFile.write("Starting logging: "+str(datetime.datetime.now())+"\n")
+
+def close_logFile():
+    global logFile
+    logFile.write("Ending logging session "+str(datetime.datetime.now())+"\n")
+    logFile.close()
 
 def pretty_outcome_display(outcomes):
     """

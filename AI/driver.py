@@ -1,15 +1,30 @@
+
 from alpha_beta import AlphaBeta
 from q_learning import Q_Learning_AI
-from utility_functions import play_n_games, pretty_outcome_display, plot_end_game_information
+from utility_functions import play_n_games, pretty_outcome_display, plot_end_game_information, \
+start_logging, close_logFile
 from matplotlib.pyplot import show
 
-LEARNING_RATE = .005
-DISCOUNT_FACTOR = .3
+global logFile
+start_logging("LogFile.txt")
+parameters = {'learning_rate': [.001, .005, .1], 'discount_factor': .4, 'num_train_games': [100, 200],
+              'num_train_rounds': [5, 25], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
+              'alpha_beta_depth': 2, 'move_limit': [500, 1000]}
+
+for learning_rate in parameters['learning_rate']:
+    for num_train_games in parameters['num_train_games']:
+        for move_limit in parameters['move_limit']:
+            logFile.write("")
+            print("________________")
+            print("Parameter Change")
+            print("________________")
+LEARNING_RATE = .001
+DISCOUNT_FACTOR = .4
 NUM_GAMES_TO_TRAIN = 100
 NUM_TRAINING_ROUNDS = 5
 NUM_VALIDATION_GAMES = 5
 NUM_GAMES_TO_TEST = 0
-TRAINING_RANDOM_MOVE_PROBABILITY = .25
+TRAINING_RANDOM_MOVE_PROBABILITY = .05
 ALPHA_BETA_DEPTH = 2
 TRAINING_MOVE_LIMIT = 500
 VALIDATION_MOVE_LIMIT = 1000
@@ -27,11 +42,11 @@ PLAYER4 = AlphaBeta(False, 3)
 training_info = []
 validation_info = []
 for j in range(NUM_TRAINING_ROUNDS):
-    training_info.extend(play_n_games(PLAYER1, PLAYER2, NUM_GAMES_TO_TRAIN, TRAINING_MOVE_LIMIT))
+    training_info.extend(play_n_games(PLAYER2, PLAYER1, NUM_GAMES_TO_TRAIN, TRAINING_MOVE_LIMIT))
     PLAYER1.print_transition_information(PLAYER1.get_transitions_information())
     PLAYER1.set_random_move_probability(0)
     PLAYER1.set_learning_rate(0)
-    validation_info.extend(play_n_games(PLAYER1, PLAYER4, NUM_VALIDATION_GAMES, VALIDATION_MOVE_LIMIT))
+    validation_info.extend(play_n_games(PLAYER4, PLAYER1, NUM_VALIDATION_GAMES, VALIDATION_MOVE_LIMIT))
     print("Round " + str(j + 1) + " completed!")
     PLAYER1.set_random_move_probability(TRAINING_RANDOM_MOVE_PROBABILITY)
     PLAYER1.set_learning_rate(LEARNING_RATE)
@@ -61,5 +76,5 @@ pretty_outcome_display(play_n_games(PLAYER1, PLAYER4, NUM_GAMES_TO_TEST, TESTING
 PLAYER1.print_transition_information(PLAYER1.get_transitions_information())
 
 """
-
+close_logFile()
 PLAYER1.save_transition_information()
