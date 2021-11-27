@@ -1,6 +1,6 @@
 from player import Player
 from utility_functions import get_number_of_pieces_and_kings
-from board import Board
+from board import CheckerBoard
 
 
 # This class is a AI learning to play checkers using Alpha-Beta pruning
@@ -14,13 +14,13 @@ class AlphaBeta(Player):
 # A class that implements the pruning algorithm to make move decisions based on the current state
     def alpha_beta(self, board, depth, alpha, beta, maximizing_player):
         if board.check_game_finished():
-            if get_number_of_pieces_and_kings(board.spots, board.player_turn) == [0, 0]:
+            if get_number_of_pieces_and_kings(board.slots, board.playersTurn) == [0, 0]:
                 if maximizing_player:
                     # Using integers instead of float("inf") so it's less than float("inf") not equal to
                     return -10000000, None
                 else:
                     return 10000000, None
-            elif get_number_of_pieces_and_kings(board.spots, not board.player_turn) == [0, 0]:
+            elif get_number_of_pieces_and_kings(board.slots, not board.playersTurn) == [0, 0]:
                 if maximizing_player:
                     return 1000000, None
                 else:
@@ -29,8 +29,8 @@ class AlphaBeta(Player):
                 return 0, None
 
         if depth == 0:
-            players_info = get_number_of_pieces_and_kings(board.spots)
-            if board.player_turn != maximizing_player:
+            players_info = get_number_of_pieces_and_kings(board.slots)
+            if board.playersTurn != maximizing_player:
                 return players_info[1] + 2 * players_info[3] - (players_info[0] + 2 * players_info[2]), None
             return players_info[0] + 2 * players_info[2] - (players_info[1] + 2 * players_info[3]), None
         possible_moves = board.get_moves_available()
@@ -40,7 +40,7 @@ class AlphaBeta(Player):
         if maximizing_player:
             v = float('-inf')
             for j in range(len(potential_spots)):
-                cur_board = Board(potential_spots[j], not board.player_turn)
+                cur_board = CheckerBoard(potential_spots[j], not board.playersTurn)
                 alpha_beta_results = self.alpha_beta(cur_board, depth - 1, alpha, beta, False)
                 if v < alpha_beta_results[0]:
                     v = alpha_beta_results[0]
@@ -54,7 +54,7 @@ class AlphaBeta(Player):
         else:
             v = float('inf')
             for j in range(len(potential_spots)):
-                cur_board = Board(potential_spots[j], not board.player_turn)
+                cur_board = CheckerBoard(potential_spots[j], not board.playersTurn)
                 alpha_beta_results = self.alpha_beta(cur_board, depth - 1, alpha, beta, True)
                 if v > alpha_beta_results[0]:
                     v = alpha_beta_results[0]

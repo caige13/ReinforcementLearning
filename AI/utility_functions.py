@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from board import Board
+from board import CheckerBoard
 
 
 def reward_function(state_info1, state_info2):
@@ -50,7 +50,7 @@ def play_n_games(player1, player2, num_games, move_limit):
     1)Both player1 and player2 inherit the Player class
     2)Both player1 and player2 play legal moves only
     """
-    game_board = Board()
+    game_board = CheckerBoard()
     player1.set_board(game_board)
     player2.set_board(game_board)
 
@@ -60,15 +60,16 @@ def play_n_games(player1, player2, num_games, move_limit):
         # print(j)
         move_counter = 0
         while not game_board.check_game_finished() and move_counter < move_limit:
-            game_board.execute_move(players_move.get_next_move())
+            game_board.executeMove(players_move.get_next_move())
 
+            game_board.show_checker_board()
             move_counter = move_counter + 1
             if players_move is player1:
                 players_move = player2
             else:
                 players_move = player1
         else:
-            piece_counter = get_number_of_pieces_and_kings(game_board.spots)
+            piece_counter = get_number_of_pieces_and_kings(game_board.slots)
             if piece_counter[0] != 0 or piece_counter[2] != 0:
                 if piece_counter[1] != 0 or piece_counter[3] != 0:
                     if move_counter == move_limit:

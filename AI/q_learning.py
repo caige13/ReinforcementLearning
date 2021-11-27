@@ -86,7 +86,7 @@ class Q_Learning_AI(Player):
         Gets the desired transition to taken for the current board configuration.
         If any possible transition does not exist, it will create it.
         """
-        cur_state = tuple(self.get_states_from_boards_spots([self.board.spots])[0])
+        cur_state = tuple(self.get_states_from_boards_spots([self.board.slots])[0])
         done_transitions = {}
         for state in possible_state_array:  # %%%%%%%%%%%%%%%%%%%%%% FOR (1)
             if done_transitions.get((cur_state, tuple(state))) is None:
@@ -111,7 +111,7 @@ class Q_Learning_AI(Player):
         Update self.transitions with a completed game before the board
         is cleared.
         """
-        cur_state = self.get_states_from_boards_spots([self.board.spots])[0]
+        cur_state = self.get_states_from_boards_spots([self.board.slots])[0]
         transition = (self.pre_last_move_state, self.post_last_move_state)
 
         self.transitions[transition] = self.transitions[transition] + self.learning_rate * reward_function(
@@ -192,7 +192,7 @@ class Q_Learning_AI(Player):
         2) ONLY WORKS FOR DEPTH OF 1 RIGHT NOW
         """
         answer = float("-inf")
-        cur_state = self.get_states_from_boards_spots([self.board.spots])[0]
+        cur_state = self.get_states_from_boards_spots([self.board.slots])[0]
         for k, v in self.transitions.items():
             if v > answer and k[0] == cur_state:
                 answer = v
@@ -210,7 +210,7 @@ class Q_Learning_AI(Player):
         1)  The board exists and is legal
         """
         if self.pre_last_move_state is not None:  # %%%%%%%%%%%%%%%%%%%%%%% FOR (1)
-            cur_state = self.get_states_from_boards_spots([self.board.spots])[0]
+            cur_state = self.get_states_from_boards_spots([self.board.slots])[0]
 
             transition = (self.pre_last_move_state, self.post_last_move_state)
             try:  # self.transitions.get(transition) is not None:#%%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR (1)
@@ -222,7 +222,7 @@ class Q_Learning_AI(Player):
                 self.transitions[transition] = self.transitions[transition] + self.learning_rate * (
                     reward_function(transition[0], cur_state))
 
-        self.pre_last_move_state = self.get_states_from_boards_spots([self.board.spots])[
+        self.pre_last_move_state = self.get_states_from_boards_spots([self.board.slots])[
             0]  # %%%%%%%%%%%%%%%%%%%%%%%%%%%% FOR (1)
 
         possible_next_moves = self.board.get_moves_available()
