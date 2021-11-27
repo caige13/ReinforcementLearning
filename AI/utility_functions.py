@@ -19,9 +19,9 @@ def GetPieces(spots, pl_id=None):
         for element in row:
             if element != 0:
                 PieceCounter[element - 1] = PieceCounter[element - 1] + 1
-    if pl_id:
+    if pl_id == True:
         return [PieceCounter[0], PieceCounter[2]]
-    elif not pl_id:
+    elif pl_id == False:
         return [PieceCounter[1], PieceCounter[3]]
     else:
         return PieceCounter
