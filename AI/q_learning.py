@@ -64,7 +64,7 @@ class QLearningAI(Player):
     # grabs the desired transition for current board corrent board config - if none exist it creates one
     def get_best_state_transition(self, possible_state_array,
                                   initial_transition_value=10):
-        cur_state = tuple(self.get_state_with_board_spots([self.board.spots])[0])
+        cur_state = tuple(self.get_state_with_board_spots([self.board.slots])[0])
         done_transitions = {}
         for state in possible_state_array:
             if done_transitions.get((cur_state, tuple(state))) is None:
@@ -86,7 +86,7 @@ class QLearningAI(Player):
 
     # update self.transition with a finished game before board clear
     def game_completed(self):
-        cur_state = self.get_state_with_board_spots([self.board.spots])[0]
+        cur_state = self.get_state_with_board_spots([self.board.slots])[0]
         transition = (self.pre_previous_move_state, self.post_previous_move_state)
 
         self.transitions[transition] = self.transitions[transition] + self.learning_rate * RewardFunction(
@@ -115,11 +115,15 @@ class QLearningAI(Player):
 
     # Prints the output of get transition_information to console
     def print_transition_info(self, info):
-        print("Total transitions: ".ljust(35), info[0])
-        print("Total visited states: ".ljust(35), info[1])
-        print("Average value of transition: ".ljust(35), info[2])
-        print("Maximum value of transition: ".ljust(35), info[3])
-        print("Minimum value of transition: ".ljust(35), info[4])
+        result_title = ["Total transitions: ", "Total visited states: ", "Average value of transition: ",
+                        "Maximum value of transition: ", "Minimum value of transition: "]
+        for i in range(len(result_title)):
+            print("{:35}".format(result_title[i], str(info[i])))
+        # print("Total transitions: ".ljust(35), info[0])
+        # print("Total visited states: ".ljust(35), info[1])
+        # print("Average value of transition: ".ljust(35), info[2])
+        # print("Maximum value of transition: ".ljust(35), info[3])
+        # print("Minimum value of transition: ".ljust(35), info[4])
 
     # Save our current transition information to json file
     def save_transition_information(self, file="data.json"):
@@ -145,7 +149,7 @@ class QLearningAI(Player):
     # If the board exists and is legal then get the next move
     def get_next_move(self):
         if self.pre_previous_move_state is not None:
-            cur_state = self.get_state_with_board_spots([self.board.spots])[0]
+            cur_state = self.get_state_with_board_spots([self.board.slots])[0]
             transition = (self.pre_previous_move_state, self.post_previous_move_state)
             try:
                 max_future_state = self.get_best_forward_looking_value(1)
@@ -155,7 +159,7 @@ class QLearningAI(Player):
             except:
                 self.transitions[transition] = self.transitions[transition] + self.learning_rate * (
                     RewardFunction(transition[0], cur_state))
-        self.pre_previous_move_state = self.get_state_with_board_spots([self.board.spots])[
+        self.pre_previous_move_state = self.get_state_with_board_spots([self.board.slots])[
             0]
         possible_next_moves = self.board.get_moves_available()
         possible_next_states = self.get_state_with_board_spots(

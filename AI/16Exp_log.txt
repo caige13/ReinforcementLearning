@@ -1,0 +1,323 @@
+___________________________________________________________________________________________
+|   Exp.   |         Hyper Parameter        |                   Results                   |
+|__________|________________________________|_____________________________________________|
+|    1     |        step size: 0.001        |              Games Played: 500              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 257         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 23        |
+|          |   num of validation games: 5   |            Num. games tied: 220             |
+|          |      num of test games: 5      |           Total moves made: 42422           |
+|          |     rand. move chance: 0.1     |         Average moves made: 84.844          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    1     |        step size: 0.001        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 19          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 6         |
+|          |   num of validation games: 5   |             Num. games tied: 0              |
+|          |      num of test games: 5      |           Total moves made: 4034            |
+|          |     rand. move chance: 0.1     |         Average moves made: 161.36          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 38              |
+|__________|________________________________|_____________________________________________|
+|    2     |        step size: 0.001        |             Games Played: 2000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |        Num. games player2 won: 1082         |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 82        |
+|          |   num of validation games: 5   |            Num. games tied: 836             |
+|          |      num of test games: 5      |          Total moves made: 155076           |
+|          |     rand. move chance: 0.1     |         Average moves made: 77.538          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    2     |        step size: 0.001        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 74          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 22        |
+|          |   num of validation games: 5   |             Num. games tied: 4              |
+|          |      num of test games: 5      |           Total moves made: 15168           |
+|          |     rand. move chance: 0.1     |         Average moves made: 151.68          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 32              |
+|__________|________________________________|_____________________________________________|
+|    3     |        step size: 0.001        |              Games Played: 500              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 286         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 18        |
+|          |   num of validation games: 5   |            Num. games tied: 196             |
+|          |      num of test games: 5      |           Total moves made: 57528           |
+|          |     rand. move chance: 0.1     |         Average moves made: 115.056         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    3     |        step size: 0.001        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 20          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 5         |
+|          |   num of validation games: 5   |             Num. games tied: 0              |
+|          |      num of test games: 5      |           Total moves made: 5952            |
+|          |     rand. move chance: 0.1     |         Average moves made: 238.08          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    4     |        step size: 0.001        |             Games Played: 2000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 1          |
+|          |    num of train games: 100     |        Num. games player2 won: 1117         |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 48        |
+|          |   num of validation games: 5   |            Num. games tied: 834             |
+|          |      num of test games: 5      |          Total moves made: 185018           |
+|          |     rand. move chance: 0.1     |         Average moves made: 92.509          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    4     |        step size: 0.001        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 70          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 26        |
+|          |   num of validation games: 5   |             Num. games tied: 4              |
+|          |      num of test games: 5      |           Total moves made: 29772           |
+|          |     rand. move chance: 0.1     |         Average moves made: 297.72          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 32              |
+|__________|________________________________|_____________________________________________|
+|    5     |        step size: 0.001        |             Games Played: 1000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 549         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 44        |
+|          |   num of validation games: 5   |            Num. games tied: 407             |
+|          |      num of test games: 5      |           Total moves made: 81164           |
+|          |     rand. move chance: 0.1     |         Average moves made: 81.164          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    5     |        step size: 0.001        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 17          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 5         |
+|          |   num of validation games: 5   |             Num. games tied: 3              |
+|          |      num of test games: 5      |           Total moves made: 3474            |
+|          |     rand. move chance: 0.1     |         Average moves made: 138.96          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 34              |
+|__________|________________________________|_____________________________________________|
+|    6     |        step size: 0.001        |             Games Played: 4000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |        Num. games player2 won: 2168         |
+|          |    num of train rounds: 20     |       Num. games move limit hit: 141        |
+|          |   num of validation games: 5   |            Num. games tied: 1691            |
+|          |      num of test games: 5      |          Total moves made: 303798           |
+|          |     rand. move chance: 0.1     |         Average moves made: 75.9495         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    6     |        step size: 0.001        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 71          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 22        |
+|          |   num of validation games: 5   |             Num. games tied: 7              |
+|          |      num of test games: 5      |           Total moves made: 14846           |
+|          |     rand. move chance: 0.1     |         Average moves made: 148.46          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    7     |        step size: 0.001        |             Games Played: 1000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 562         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 17        |
+|          |   num of validation games: 5   |            Num. games tied: 421             |
+|          |      num of test games: 5      |           Total moves made: 85684           |
+|          |     rand. move chance: 0.1     |         Average moves made: 85.684          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    7     |        step size: 0.001        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 18          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 7         |
+|          |   num of validation games: 5   |             Num. games tied: 0              |
+|          |      num of test games: 5      |           Total moves made: 7850            |
+|          |     rand. move chance: 0.1     |          Average moves made: 314.0          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 34              |
+|__________|________________________________|_____________________________________________|
+|    8     |        step size: 0.001        |             Games Played: 4000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |        Num. games player2 won: 2302         |
+|          |    num of train rounds: 20     |       Num. games move limit hit: 109        |
+|          |   num of validation games: 5   |            Num. games tied: 1589            |
+|          |      num of test games: 5      |          Total moves made: 391536           |
+|          |     rand. move chance: 0.1     |         Average moves made: 97.884          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    8     |        step size: 0.001        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 77          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 18        |
+|          |   num of validation games: 5   |             Num. games tied: 5              |
+|          |      num of test games: 5      |           Total moves made: 22002           |
+|          |     rand. move chance: 0.1     |         Average moves made: 220.02          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    9     |        step size: 0.005        |              Games Played: 500              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 1          |
+|          |    num of train games: 100     |         Num. games player2 won: 274         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 26        |
+|          |   num of validation games: 5   |            Num. games tied: 199             |
+|          |      num of test games: 5      |           Total moves made: 43972           |
+|          |     rand. move chance: 0.1     |         Average moves made: 87.944          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 28              |
+|__________|________________________________|_____________________________________________|
+|    9     |        step size: 0.005        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 18          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 5         |
+|          |   num of validation games: 5   |             Num. games tied: 2              |
+|          |      num of test games: 5      |           Total moves made: 3464            |
+|          |     rand. move chance: 0.1     |         Average moves made: 138.56          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    10    |        step size: 0.005        |             Games Played: 2000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 1          |
+|          |    num of train games: 100     |        Num. games player2 won: 1073         |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 85        |
+|          |   num of validation games: 5   |            Num. games tied: 841             |
+|          |      num of test games: 5      |          Total moves made: 161028           |
+|          |     rand. move chance: 0.1     |         Average moves made: 80.514          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    10    |        step size: 0.005        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 75          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 20        |
+|          |   num of validation games: 5   |             Num. games tied: 5              |
+|          |      num of test games: 5      |           Total moves made: 14222           |
+|          |     rand. move chance: 0.1     |         Average moves made: 142.22          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    11    |        step size: 0.005        |              Games Played: 500              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 275         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 21        |
+|          |   num of validation games: 5   |            Num. games tied: 204             |
+|          |      num of test games: 5      |           Total moves made: 58258           |
+|          |     rand. move chance: 0.1     |         Average moves made: 116.516         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    11    |        step size: 0.005        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 19          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 5         |
+|          |   num of validation games: 5   |             Num. games tied: 1              |
+|          |      num of test games: 5      |           Total moves made: 5971            |
+|          |     rand. move chance: 0.1     |         Average moves made: 238.84          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 36              |
+|__________|________________________________|_____________________________________________|
+|    12    |        step size: 0.005        |             Games Played: 2000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 2          |
+|          |    num of train games: 100     |        Num. games player2 won: 1157         |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 45        |
+|          |   num of validation games: 5   |            Num. games tied: 796             |
+|          |      num of test games: 5      |          Total moves made: 183322           |
+|          |     rand. move chance: 0.1     |         Average moves made: 91.661          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    12    |        step size: 0.005        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 100     |         Num. games player2 won: 76          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 16        |
+|          |   num of validation games: 5   |             Num. games tied: 8              |
+|          |      num of test games: 5      |           Total moves made: 20224           |
+|          |     rand. move chance: 0.1     |         Average moves made: 202.24          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 36              |
+|__________|________________________________|_____________________________________________|
+|    13    |        step size: 0.005        |             Games Played: 1000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 545         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 49        |
+|          |   num of validation games: 5   |            Num. games tied: 406             |
+|          |      num of test games: 5      |           Total moves made: 80832           |
+|          |     rand. move chance: 0.1     |         Average moves made: 80.832          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
+|    13    |        step size: 0.005        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 21          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 1         |
+|          |   num of validation games: 5   |             Num. games tied: 3              |
+|          |      num of test games: 5      |           Total moves made: 1762            |
+|          |     rand. move chance: 0.1     |          Average moves made: 70.48          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 36              |
+|__________|________________________________|_____________________________________________|
+|    14    |        step size: 0.005        |             Games Played: 4000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 3          |
+|          |    num of train games: 200     |        Num. games player2 won: 2208         |
+|          |    num of train rounds: 20     |       Num. games move limit hit: 134        |
+|          |   num of validation games: 5   |            Num. games tied: 1655            |
+|          |      num of test games: 5      |          Total moves made: 306078           |
+|          |     rand. move chance: 0.1     |         Average moves made: 76.5195         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    14    |        step size: 0.005        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 1          |
+|          |    num of train games: 200     |         Num. games player2 won: 72          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 22        |
+|          |   num of validation games: 5   |             Num. games tied: 5              |
+|          |      num of test games: 5      |           Total moves made: 14865           |
+|          |     rand. move chance: 0.1     |         Average moves made: 148.65          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 500    |
+|          |        move limit: 500         |              Min move made: 34              |
+|__________|________________________________|_____________________________________________|
+|    15    |        step size: 0.005        |             Games Played: 1000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 538         |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 27        |
+|          |   num of validation games: 5   |            Num. games tied: 435             |
+|          |      num of test games: 5      |          Total moves made: 103276           |
+|          |     rand. move chance: 0.1     |         Average moves made: 103.276         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    15    |        step size: 0.005        |              Games Played: 25               |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |         Num. games player2 won: 21          |
+|          |     num of train rounds: 5     |        Num. games move limit hit: 3         |
+|          |   num of validation games: 5   |             Num. games tied: 1              |
+|          |      num of test games: 5      |           Total moves made: 4100            |
+|          |     rand. move chance: 0.1     |          Average moves made: 164.0          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 36              |
+|__________|________________________________|_____________________________________________|
+|    16    |        step size: 0.005        |             Games Played: 4000              |
+|  train   |      discount factor: 0.4      |          Num. games player1 won: 0          |
+|          |    num of train games: 200     |        Num. games player2 won: 2255         |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 82        |
+|          |   num of validation games: 5   |            Num. games tied: 1663            |
+|          |      num of test games: 5      |          Total moves made: 349782           |
+|          |     rand. move chance: 0.1     |         Average moves made: 87.4455         |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 26              |
+|__________|________________________________|_____________________________________________|
+|    16    |        step size: 0.005        |              Games Played: 100              |
+|validation|      discount factor: 0.4      |          Num. games player1 won: 1          |
+|          |    num of train games: 200     |         Num. games player2 won: 69          |
+|          |    num of train rounds: 20     |        Num. games move limit hit: 24        |
+|          |   num of validation games: 5   |             Num. games tied: 6              |
+|          |      num of test games: 5      |           Total moves made: 27816           |
+|          |     rand. move chance: 0.1     |         Average moves made: 278.16          |
+|          |      Alpha-Beta Depth: 2       |   Max move made (may be move limit): 1000   |
+|          |        move limit: 1000        |              Min move made: 30              |
+|__________|________________________________|_____________________________________________|
