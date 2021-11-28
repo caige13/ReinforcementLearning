@@ -119,11 +119,6 @@ class QLearningAI(Player):
                         "Maximum value of transition: ", "Minimum value of transition: "]
         for i in range(len(result_title)):
             print("{:35}".format(result_title[i], str(info[i])))
-        # print("Total transitions: ".ljust(35), info[0])
-        # print("Total visited states: ".ljust(35), info[1])
-        # print("Average value of transition: ".ljust(35), info[2])
-        # print("Maximum value of transition: ".ljust(35), info[3])
-        # print("Minimum value of transition: ".ljust(35), info[4])
 
     # Save our current transition information to json file
     def save_transition_information(self, file="data.json"):
