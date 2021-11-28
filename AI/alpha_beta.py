@@ -1,6 +1,6 @@
 from player import Player
 from utility_functions import GetPieces
-from board import Board
+from board import CheckerBoard
 
 
 # This class is a AI learning to play checkers using Alpha-Beta pruning
@@ -14,14 +14,13 @@ class AlphaBeta(Player):
 # A class that implements the pruning algorithm to make move decisions based on the current state
     def alpha_beta(self, board, depth, alpha, beta, maximizing_player):
         if board.check_game_finished():
-            if GetPieces(board.spots, board.player_turn) == [0, 0]:
-            if get_number_of_pieces_and_kings(board.slots, board.playersTurn) == [0, 0]:
+            if GetPieces(board.slots, board.playersTurn) == [0, 0]:
                 if maximizing_player:
                     # Using integers instead of float("inf") so it's less than float("inf") not equal to
                     return -10000000, None
                 else:
                     return 10000000, None
-            elif GetPieces(board.spots, not board.player_turn) == [0, 0]:
+            elif GetPieces(board.slots, not board.playersTurn) == [0, 0]:
                 if maximizing_player:
                     return 1000000, None
                 else:
@@ -30,8 +29,8 @@ class AlphaBeta(Player):
                 return 0, None
 
         if depth == 0:
-            info_players = GetPieces(board.spots)
-            if board.player_turn != maximizing_player:
+            info_players = GetPieces(board.slots)
+            if board.playersTurn != maximizing_player:
                 return info_players[1] + 2 * info_players[3] - (info_players[0] + 2 * info_players[2]), None
             return info_players[0] + 2 * info_players[2] - (info_players[1] + 2 * info_players[3]), None
         possible_moves = board.get_moves_available()

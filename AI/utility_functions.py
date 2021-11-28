@@ -1,6 +1,5 @@
-
 import matplotlib.pyplot as plt
-import datetime
+from global_logging import file
 from board import CheckerBoard
 
 # function rewards for transitioning from one input state to the other
@@ -31,7 +30,7 @@ def GetPieces(spots, pl_id=None):
 # outputs arrays in format of
 # [[game1_outcome, num_moves, num_own_pieces, num_opp_pieces, num_own_kings, num_opp_kings]...]
 def PlayNGames(p1, p2, num_games, mv_limit):
-    game_board = Board()
+    game_board = CheckerBoard()
     p1.set_board(game_board)
     p2.set_board(game_board)
     players_mv = p1
@@ -46,7 +45,7 @@ def PlayNGames(p1, p2, num_games, mv_limit):
             else:
                 players_mv = p1
         else:
-            piece_counter = GetPieces(game_board.spots)
+            piece_counter = GetPieces(game_board.slots)
             if piece_counter[0] != 0 or piece_counter[2] != 0:
                 if piece_counter[1] != 0 or piece_counter[3] != 0:
                     if move_counter == mv_limit:
@@ -67,9 +66,17 @@ def PlayNGames(p1, p2, num_games, mv_limit):
             game_board.game_reset()
     return outcome_counter
 
-# prints the outcome of PlayNGames in nice format
-def PrintOutcome(outcomes):
+# prints the outcome of PlayNGames in nice format and logs it in the log file
+def PrintOutcome(outcomes, log_param, experimentCount, type):
+    logFile = open(file, "a")
     game_wins = [0, 0, 0, 0]
+    format_param = ["step size: "+str(log_param['learning_rate']), "discount factor: "+str(log_param['discount_factor']),
+                    "num of train games: "+str(log_param['num_train_games']),
+                    "num of train rounds: "+str(log_param['num_train_rounds']),
+                    "num of validation games: "+str(log_param['num_validation_games']),
+                    "num of test games: "+str(log_param['num_test_games']),
+                    "rand. move chance: "+str(log_param['random_move_chance']),
+                    "Alpha-Beta Depth: "+str(log_param['alpha_beta_depth']), "move limit: "+str(log_param['move_limit'])]
     cumulative_mvs = 0
     max_mvs = float("-inf")
     min_mvs = float("inf")
@@ -80,16 +87,24 @@ def PrintOutcome(outcomes):
         if outcome[1] > max_mvs:
             max_mvs = outcome[1]
         game_wins[outcome[0]] = game_wins[outcome[0]] + 1
-    print("Games Played: ".ljust(35), len(outcomes))
-    print("Player 1 is the winner: ".ljust(35), game_wins[0])
-    print("Player 2 is the winner: ".ljust(35), game_wins[1])
-    print("Games have exceeded move limit: ".ljust(35), game_wins[3])
-    print("Number of games tied: ".ljust(35), game_wins[2])
-    print("Total moves that were made: ".ljust(35), cumulative_mvs)
-    print("Average moves that were made: ".ljust(35), cumulative_mvs / len(outcomes))
-    print("Max moves that were made: ".ljust(35), max_mvs)
-    print("Min moves that were made: ".ljust(35), min_mvs)
 
+    result_title = ["Games Played: ", "Num. games player1 won: ", "Num. games player2 won: ",
+                    "Num. games move limit hit: ", "Num. games tied: ", "Total moves made: ",
+                    "Average moves made: ", "Max move made (may be move limit): ",
+                    "Min move made: "]
+    result = [len(outcomes), game_wins[0], game_wins[1], game_wins[3], game_wins[2],
+              cumulative_mvs, cumulative_mvs / len(outcomes), max_mvs, min_mvs]
+    logFile.write("|{:^10}|{:^32}|{:^45}|\n".format(experimentCount, format_param[0],
+                                                   result_title[0]+str(result[0])))
+    logFile.write("|{:^10}|{:^32}|{:^45}|\n".format(type, format_param[1],
+                                                    result_title[1] + str(result[1])))
+    for i in range(2, len(format_param)):
+        logFile.write("|{:^10}|{:^32}|{:^45}|\n".format("", format_param[i],
+                                                                      result_title[i]+str(result[i])))
+    logFile.write("|__________|________________________________|_____________________________________________|\n")
+    logFile.close()
+    for i in range(len(result)):
+        print("{:35}".format(result_title[i]), result[i])
 
 def PlotEndGameInformation(outcome, interval, title="End of Game Results"):
     p1_wins = [0 for _ in range(int(len(outcome) / interval))]
@@ -107,10 +122,10 @@ def PlotEndGameInformation(outcome, interval, title="End of Game Results"):
             else:
                 move_limit[j] = move_limit[j] + 1
     plt.figure(title)
-    p1_win_graph, = plt.plot(p1_wins, label="Player 1 is the winner!")
-    p2_win_graph, = plt.plot(p2_wins, label="Player 2 is the winner!")
-    tie_graph, = plt.plot(ties, label="Ties")
-    move_limit_graph, = plt.plot(move_limit, label="Move limit has been reached")
+    p1_win_graph, = plt.plot(p1_wins, label="Player 1 is the winner!", color="blue")
+    p2_win_graph, = plt.plot(p2_wins, label="Player 2 is the winner!", color="orange")
+    tie_graph, = plt.plot(ties, label="Ties", color="green")
+    move_limit_graph, = plt.plot(move_limit, label="Move limit has been reached", color="red")
     plt.ylabel("Occurance per " + str(interval) + " games")
     plt.xlabel("Interval")
     plt.legend(handles=[p1_win_graph, p2_win_graph, tie_graph, move_limit_graph])

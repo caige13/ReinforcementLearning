@@ -144,7 +144,7 @@ class CheckerBoard:
                             if self.get_info(begLocation) != self.player2 or n2[j][0] != 0:
                                 tm_2 = [begLocation, n2[j]]
                                 tBoard = CheckerBoard(copy.deepcopy(self.slots), self.playersTurn)
-                                tBoard.executeMove(tm_2, False)
+                                tBoard.execute_move(tm_2, False)
                                 solution.extend(tBoard.jumpMoves(tm_2[1], tm1))
                         if len(solution) == answerLen:
                             solution.append(tm1)
@@ -182,13 +182,13 @@ class CheckerBoard:
         solution = []
         for move in moves:
             originalSpots = copy.deepcopy(self.slots)
-            self.executeMove(move, swapPlayer=False)
+            self.execute_move(move, swapPlayer=False)
             solution.append(self.slots)
             self.slots = originalSpots
         return solution
 
     # executes the inputted move and changes the state of the board to reflect it - switches to other player's turn
-    def executeMove(self, move, swapPlayer=True):
+    def execute_move(self, move, swapPlayer=True):
         if abs(move[0][0] - move[1][0]) == 2:
             for j in range(len(move) - 1):
                 if move[j][0] % 2 == 1:
