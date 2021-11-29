@@ -3,19 +3,19 @@ from functools import reduce
 import copy
 
 class CheckerBoard:
-    player1 = 1
-    player1O = 3
-    player2 = 2
-    player2O = 4
-    reversePlayer = player2
-    blankSquare = 0
-    # Width of the board, there will only be 4 possible columns for a given row.
-    W = 4
-    # 8 rows
-    H = 8
 
     # Creates a new Board class instance, in the starting configuration
     def __init__(self, oldSpots=None, playersTurn=True):
+        self.player1 = 1
+        self.player1O = 3
+        self.player2 = 2
+        self.player2O = 4
+        self.reversePlayer = self.player2
+        self.blankSquare = 0
+        # Width of the board, there will only be 4 possible columns for a given row.
+        self.W = 4
+        # 8 rows
+        self.H = 8
         if not (oldSpots is None):
             self.slots = oldSpots
         else:
