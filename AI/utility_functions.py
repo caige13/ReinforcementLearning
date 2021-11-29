@@ -3,25 +3,29 @@ from global_logging import file
 from board import CheckerBoard
 
 # function rewards for transitioning from one input state to the other
-def RewardFunction(state1_info, state2_info):
-    if state2_info[1] == 0 and state2_info[3] == 0:
-        return 12
-    if state2_info[0] == 0 and state2_info[2] == 0:
-        return -12
-    return state2_info[0] - state1_info[0] + 2 * (state2_info[2] - state1_info[2]) - (
-            state2_info[1] - state1_info[1]) - 2 * (state2_info[3] - state1_info[3])
+def RewardFunction(preStateInformation, postStateInformation):
+    winReward = 14
+    if postStateInformation[2] == 0 and postStateInformation[0] == 0:
+        return -winReward
+    if  postStateInformation[3] == 0 and postStateInformation[1] == 0:
+        return winReward
+    intermediateReward = postStateInformation[0] - preStateInformation[0] + 2 * \
+                            (postStateInformation[2] - preStateInformation[2]) - (
+                                postStateInformation[1] - preStateInformation[1]) - 2 * (
+                                postStateInformation[3] - preStateInformation[3])
+    return intermediateReward
 
 # Grabs the number of pieces and kings that each player has currently
 # output in form [P1_pieces, P2_pieces, P1_kings, P2_kings]
-def GetPieces(spots, pl_id=None):
+def GetPieces(spots, idPL=None):
     PieceCounter = [0, 0, 0, 0]
     for row in spots:
         for element in row:
             if element != 0:
                 PieceCounter[element - 1] = PieceCounter[element - 1] + 1
-    if pl_id == True:
+    if idPL == True:
         return [PieceCounter[0], PieceCounter[2]]
-    elif pl_id == False:
+    elif idPL == False:
         return [PieceCounter[1], PieceCounter[3]]
     else:
         return PieceCounter
@@ -29,42 +33,59 @@ def GetPieces(spots, pl_id=None):
 # Plays n games of checkers, games stop after given move limit
 # outputs arrays in format of
 # [[game1_outcome, num_moves, num_own_pieces, num_opp_pieces, num_own_kings, num_opp_kings]...]
-def PlayNGames(p1, p2, num_games, mv_limit):
-    game_board = CheckerBoard()
-    p1.set_checkersBoard(game_board)
-    p2.set_checkersBoard(game_board)
-    players_mv = p1
-    outcome_counter = [[-1, -1, -1, -1, -1, -1] for j in range(num_games)]
-    for j in range(num_games):
-        move_counter = 0
-        while not game_board.check_game_finished() and move_counter < mv_limit:
-            game_board.execute_move(players_mv.get_next_move())
-            move_counter = move_counter + 1
-            if players_mv is p1:
-                players_mv = p2
+def PlayNGames(p1, p2, gamesToPlay, numMoveLimitation):
+    board = CheckerBoard()
+    # setting up players to play on same game board
+    p2.set_checkersBoard(board)
+    p1.set_checkersBoard(board)
+    # initialize outcome with negatives
+    gameOutcome = [[-1, -1, -1, -1, -1, -1] for j in range(gamesToPlay)]
+    isPlayersTurn = p1
+    for j in range(gamesToPlay):
+        moves = 0
+        # play the actual game
+        while not board.check_game_finished() and moves < numMoveLimitation:
+            board.execute_move(isPlayersTurn.get_next_move())
+            moves = moves + 1
+            # swap the players
+            if isPlayersTurn is p2:
+                isPlayersTurn = p1
+            elif isPlayersTurn is p1:
+                isPlayersTurn = p2
+            # This case should never happen
             else:
-                players_mv = p1
+                print("ERROR")
+                exit(1)
         else:
-            piece_counter = GetPieces(game_board.slots)
-            if piece_counter[0] != 0 or piece_counter[2] != 0:
-                if piece_counter[1] != 0 or piece_counter[3] != 0:
-                    if move_counter == mv_limit:
-                        outcome_counter[j][0] = 3
+            # contain the regular pieces and king counts for both players
+            PieceCount = GetPieces(board.slots)
+            if PieceCount[0] != 0 or PieceCount[2] != 0:
+                if PieceCount[1] != 0 or PieceCount[3] != 0:
+                    # max move limit hit
+                    if moves == numMoveLimitation:
+                        gameOutcome[j][0] = 3
+                    # Tie game
                     else:
-                        outcome_counter[j][0] = 2
+                        gameOutcome[j][0] = 2
+                # P1 won
                 else:
-                    outcome_counter[j][0] = 0
+                    gameOutcome[j][0] = 0
+            # P2 won
             else:
-                outcome_counter[j][0] = 1
-            outcome_counter[j][1] = move_counter
-            outcome_counter[j][2] = piece_counter[0]
-            outcome_counter[j][3] = piece_counter[1]
-            outcome_counter[j][4] = piece_counter[2]
-            outcome_counter[j][5] = piece_counter[3]
+                gameOutcome[j][0] = 1
+
+            # Defining gameOutcome
+            gameOutcome[j][1] = moves
+            gameOutcome[j][2] = PieceCount[0]
+            gameOutcome[j][3] = PieceCount[1]
+            gameOutcome[j][4] = PieceCount[2]
+            gameOutcome[j][5] = PieceCount[3]
+            # do necessary resets to start new game
             p1.isGameFinished()
             p2.isGameFinished()
-            game_board.game_reset()
-    return outcome_counter
+            board.game_reset()
+    # Game outcome will hav the number of "rows" equal to the number of games played
+    return gameOutcome
 
 # prints the outcome of PlayNGames in nice format and logs it in the log file
 def PrintOutcome(outcomes, log_param, experimentCount, type):
