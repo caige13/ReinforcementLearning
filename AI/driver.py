@@ -40,8 +40,6 @@ for learningRate in parameters['learning_rate']:
                                         # , dataLoc="data.json")
                 PLAYER2 = AlphaBeta(False, parameters['alpha_beta_depth'])
                 PLAYER4 = AlphaBeta(False, 3)
-                # PLAYER5 = Q_Learning_AI(False, learningRate, parameter['discount_factor'],
-                # the_random_move_probability=parameter['random_move_chance'])
                 training_info = []
                 validation_info = []
                 for j in range(numTrainRound):
