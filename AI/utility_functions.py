@@ -31,8 +31,8 @@ def GetPieces(spots, pl_id=None):
 # [[game1_outcome, num_moves, num_own_pieces, num_opp_pieces, num_own_kings, num_opp_kings]...]
 def PlayNGames(p1, p2, num_games, mv_limit):
     game_board = CheckerBoard()
-    p1.set_board(game_board)
-    p2.set_board(game_board)
+    p1.set_checkersBoard(game_board)
+    p2.set_checkersBoard(game_board)
     players_mv = p1
     outcome_counter = [[-1, -1, -1, -1, -1, -1] for j in range(num_games)]
     for j in range(num_games):
