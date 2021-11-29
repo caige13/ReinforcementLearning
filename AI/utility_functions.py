@@ -75,11 +75,12 @@ def PlayNGames(p1, p2, gamesToPlay, numMoveLimitation):
                 gameOutcome[j][0] = 1
 
             # Defining gameOutcome
-            gameOutcome[j][1] = moves
-            gameOutcome[j][2] = PieceCount[0]
-            gameOutcome[j][3] = PieceCount[1]
-            gameOutcome[j][4] = PieceCount[2]
             gameOutcome[j][5] = PieceCount[3]
+            gameOutcome[j][2] = PieceCount[0]
+            gameOutcome[j][1] = moves
+            gameOutcome[j][4] = PieceCount[2]
+            gameOutcome[j][3] = PieceCount[1]
+
             # do necessary resets to start new game
             p1.isGameFinished()
             p2.isGameFinished()
