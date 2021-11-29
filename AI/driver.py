@@ -4,9 +4,12 @@ from alpha_beta import AlphaBeta
 from q_learning import QLearningAI
 from utility_functions import PlayNGames, PrintOutcome, PlotEndGameInformation
 
-parameters = {'learning_rate': [.001, .005], 'discount_factor': .7, 'num_train_games': [100, 200],
-              'num_train_rounds': [5, 20], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
-              'alpha_beta_depth': 2, 'move_limit': [500, 1000]}
+# parameters = {'learning_rate': [.001, .005], 'discount_factor': .7, 'num_train_games': [100, 200],
+#               'num_train_rounds': [5, 20], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
+#               'alpha_beta_depth': 2, 'move_limit': [500, 1000]}
+parameters = {'learning_rate': [.001], 'discount_factor': .4, 'num_train_games': [100],
+              'num_train_rounds': [5], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
+              'alpha_beta_depth': 2, 'move_limit': [500]}
 
 logFile = open(file, "w")
 logFile.write("___________________________________________________________________________________________\n")
@@ -33,8 +36,8 @@ for learningRate in parameters['learning_rate']:
                 print("move limit: "+str(moveLimit))
                 print("number of train rounds: "+str(numTrainRound)+"\n")
                 PLAYER1 = QLearningAI(True, learningRate, parameters['discount_factor'],
-                                        the_random_move_probability=parameters['random_move_chance'])
-                                        # , info_location="data.json")
+                                      randomMoveChance=parameters['random_move_chance'])
+                                        # , dataLoc="data.json")
                 PLAYER2 = AlphaBeta(False, parameters['alpha_beta_depth'])
                 PLAYER4 = AlphaBeta(False, 3)
                 # PLAYER5 = Q_Learning_AI(False, learningRate, parameter['discount_factor'],

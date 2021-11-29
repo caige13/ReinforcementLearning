@@ -3,10 +3,10 @@
 class Player:
     #set the board object
     def set_board(self, board):
-        self.board = board
+        self.checkersBoard = board
 
     #can be overrwritten if AI that implements this needs to be notified the game ended before wiping
-    def game_completed(self):
+    def isGameFinished(self):
         pass
 
     #get the AI's desired next move

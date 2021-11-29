@@ -61,8 +61,8 @@ def PlayNGames(p1, p2, num_games, mv_limit):
             outcome_counter[j][3] = piece_counter[1]
             outcome_counter[j][4] = piece_counter[2]
             outcome_counter[j][5] = piece_counter[3]
-            p1.game_completed()
-            p2.game_completed()
+            p1.isGameFinished()
+            p2.isGameFinished()
             game_board.game_reset()
     return outcome_counter
 

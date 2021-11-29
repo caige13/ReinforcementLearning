@@ -1,167 +1,219 @@
-
 from player import Player
 import random
+import math
 from utility_functions import RewardFunction
 import json
 from ast import literal_eval
 
 
 class QLearningAI(Player):
-    def __init__(self, id, learning_rate, discount_factor, location_info=None,
-                 the_random_move_probability=0, the_board=None):
-
-        self.random_move_probability = the_random_move_probability
-        self.learning_rate = learning_rate
-        self.discount_factor = discount_factor
-        self.player_id = id
-        self.board = the_board
-        self.pre_previous_move_state = None
-        self.post_previous_move_state = None
-        if not location_info is None:
-            self.file_transition_info_load(location_info)
+    def __init__(self, id, learningRate, discountFactor, dataLoc=None,
+                 randomMoveChance=0, board=None):
+        if not dataLoc is None:
+            self.file_transition_info_load(dataLoc)
         else:
             self.transitions = {}
+        # both before and after are used as kinda temporary variables when
+        # evaluating the next move
+        self.beforeMovState = None
+        self.afterMovState = None
+
+        # This is a term in RL that refers to dose the AI care about
+        # immediate reward or long term rewards.
+        self.discountFactor = discountFactor
+
+        self.learningRate = learningRate
+        self.checkersBoard = board
+
+        # use this to determine if there should be a random move made
+        # utilized during training.
+        self.randomMoveChance = randomMoveChance
+        self.id = id
 
     # sets the AI's random move probability
     def set_likelihood_random_move_(self, probability):
-        self.random_move_probability = probability
+        self.randomMoveChance = probability
 
     #sets the AI's learning rate
-    def set_learning_rate(self, learning_rate):
-        self.learning_rate = learning_rate
+    def set_learning_rate(self, learningRate):
+        self.learningRate = learningRate
 
     # grabs a tuple array from the inputted board spots -each tuple represents characteristics to define the board state
-    #Format of returned data:[(own_pieces, opp_pieces, own_kings, opp_kings, own_edges, own_vert_center_mass, opp_vert_center_mass), ..]
-    def get_state_with_board_spots(self, boards_spots):
-        piece_count = [[0, 0, 0, 0, 0, 0, 0] for j in range(len(boards_spots))]
-        for k in range(len(boards_spots)):
-            for j in range(len(boards_spots[k])):
-                for i in range(len(boards_spots[k][j])):
-                    if boards_spots[k][j][i] != 0:
-                        piece_count[k][boards_spots[k][j][i] - 1] = piece_count[k][boards_spots[k][j][i] - 1] + 1
-                        if (self.player_id and (boards_spots[k][j][i] == 1 or boards_spots[k][j][i] == 3)) or (
-                                not self.player_id and (boards_spots[k][j][i] == 2 or boards_spots[k][j][i] == 4)):
-                            if i == 0 and j % 2 == 0:
-                                piece_count[k][4] = piece_count[k][4] + 1
-                            elif i == 3 and j % 2 == 1:
-                                piece_count[k][4] = piece_count[k][4] + 1
+    def get_state_with_board_slots(self, boardsSlots):
+        # Format: [(own pieces, opponent's pieces, own kings, opponent's kings,
+        #           own edges, own vert center mass, opponent's vert center mass), ..]
+        pieceCount = [[0, 0, 0, 0, 0, 0, 0] for j in range(len(boardsSlots))]
 
-                            piece_count[k][5] = piece_count[k][5] + j
+        # for the most part the first forloop will only be ran once.
+        for i in range(len(boardsSlots)):
+            for row in range(len(boardsSlots[i])):
+                for col in range(len(boardsSlots[i][row])):
+                    # null checker
+                    if boardsSlots[i][row][col] != 0:
+                        # pieceCount is a two dimensional array
+                        pieceCount[i][boardsSlots[i][row][col] - 1] = pieceCount[i][boardsSlots[i][row][col] - 1] + 1
+                        if (not self.id and (boardsSlots[i][row][col] == 2 or boardsSlots[i][row][col] == 4)) \
+                            or (self.id and (boardsSlots[i][row][col] == 1 or boardsSlots[i][row][col] == 3)):
+                            if col == 0 and row % 2 == 0:
+                                # Own piece on the edge
+                                pieceCount[i][4] = pieceCount[i][4] + 1
+                            elif col == 3 and row % 2 == 1:
+                                # Own piece on the edge
+                                pieceCount[i][4] = pieceCount[i][4] + 1
+                            # update own center mass
+                            pieceCount[i][5] = pieceCount[i][5] + row
                         else:
-                            piece_count[k][6] = piece_count[k][6] + j
+                            # update opponent's center mass
+                            pieceCount[i][6] = pieceCount[i][6] + row
 
-            if piece_count[k][0] + piece_count[k][2] != 0:
-                piece_count[k][5] = int(piece_count[k][5] / (piece_count[k][0] + piece_count[k][2]))
+            if pieceCount[i][1] + pieceCount[i][3] != 0:
+                # update opponent's center mass
+                pieceCount[i][6] = int(pieceCount[i][6] / (pieceCount[i][1] + pieceCount[i][3]))
             else:
-                piece_count[k][5] = 0
-            if piece_count[k][1] + piece_count[k][3] != 0:
-                piece_count[k][6] = int(piece_count[k][6] / (piece_count[k][1] + piece_count[k][3]))
+                # update opponent's center mass
+                pieceCount[i][6] = 0
+            if pieceCount[i][0] + pieceCount[i][2] != 0:
+                # update own center mass
+                pieceCount[i][5] = int(pieceCount[i][5] / (pieceCount[i][0] + pieceCount[i][2]))
             else:
-                piece_count[k][6] = 0
+                # update own center mass
+                pieceCount[i][5] = 0
 
-        return [tuple(counter) for counter in piece_count]
+        #convert output to tuple
+        return [tuple(counter) for counter in pieceCount]
 
-    # grabs the desired transition for current board corrent board config - if none exist it creates one
-    def get_best_state_transition(self, possible_state_array,
-                                  initial_transition_value=10):
-        cur_state = tuple(self.get_state_with_board_spots([self.board.slots])[0])
-        done_transitions = {}
-        for state in possible_state_array:
-            if done_transitions.get((cur_state, tuple(state))) is None:
-                if self.transitions.get((cur_state, tuple(state))) is None:
-                    self.transitions.update({(cur_state, tuple(state)): initial_transition_value})
-                done_transitions.update({(cur_state, tuple(state)): self.transitions.get((cur_state, tuple(state)))})
+    # grabs the desired transition for current board config - if none exist it creates one
+    def get_best_state_transition(self, allPossibleStates,
+                                  initialTransValue=10):
+        # Get the current state from the board with its slots.
+        currentState = tuple(self.get_state_with_board_slots([self.checkersBoard.slots])[0])
+        prevTransitions = {}
+        for state in allPossibleStates:
+            # updating the transition that drives the function
+            if prevTransitions.get((currentState, tuple(state))) is None:
+                # also updating the class transitions if not found.
+                if self.transitions.get((currentState, tuple(state))) is None:
+                    self.transitions.update({(currentState, tuple(state)): initialTransValue})
+                prevTransitions.update({(currentState, tuple(state)): self.transitions.get((currentState, tuple(state)))})
 
-        if random != 0 and random.random() < self.random_move_probability:
+        # Determine if random move based off the randomMoveChance, also checks edge case of 0%
+        if  random.random() < self.randomMoveChance and random != 0:
+            # need the try catch because a transition may be None.
             try:
-                return list(done_transitions.keys())[random.randint(0, len(done_transitions) - 1)]
+                return list(prevTransitions.keys())[random.randint(0, len(prevTransitions) - 1)]
             except:
                 return []
 
+        # expected return value is to reverse the key value
         try:
-            reverse_dict = {j: i for i, j in done_transitions.items()}
-            return reverse_dict.get(max(reverse_dict))
+            backwordTransitions = {j: i for i, j in prevTransitions.items()}
+            return backwordTransitions.get(max(backwordTransitions))
         except:
             return []
 
     # update self.transition with a finished game before board clear
-    def game_completed(self):
-        cur_state = self.get_state_with_board_spots([self.board.slots])[0]
-        transition = (self.pre_previous_move_state, self.post_previous_move_state)
+    def isGameFinished(self):
+        #reset state
+        currentState = self.get_state_with_board_slots([self.checkersBoard.slots])[0]
+        transition = (self.beforeMovState, self.afterMovState)
+        # reset values
+        self.beforeMovState = None
+        self.afterMovState = None
 
-        self.transitions[transition] = self.transitions[transition] + self.learning_rate * RewardFunction(
-            transition[0], cur_state)
-
-        self.pre_previous_move_state = None
-        self.post_previous_move_state = None
+        self.transitions[transition] = self.transitions[transition] + self.learningRate * RewardFunction(
+            transition[0], currentState)
 
     # Get array of information about the dictionary self.transitions
     # in form num_transitions, num_start_of_transitions, avg_value, max_value, min_value]
     def get_transitions_info(self):
-        begining_of_transitions = {}
-        max_v = float("-inf")
-        min_v = float("inf")
+        begTransitions = {}
+        # positive infinite initialization
+        maxValue = -math.inf
+        # negative infinite initialization
+        minValue = math.inf
         cumulativeValue = 0
+
+        #key value iteration
         for k, v in self.transitions.items():
-            if begining_of_transitions.get(k[0]) is None:
-                begining_of_transitions.update({k[0]: 0})
-            if v > max_v:
-                max_v = v
-            if v < min_v:
-                min_v = v
+            # Getting total value
             cumulativeValue = cumulativeValue + v
-        return [len(self.transitions), len(begining_of_transitions), float(cumulativeValue / len(self.transitions)), max_v,
-                min_v]
+            # filling in blanks
+            if begTransitions.get(k[0]) is None:
+                begTransitions.update({k[0]: 0})
+            # Get min value
+            if v < minValue:
+                minValue = v
+            # Get max value
+            if v > maxValue:
+                maxValue = v
+
+        return [len(self.transitions), len(begTransitions), float(cumulativeValue / len(self.transitions)), maxValue,
+                minValue]
 
     # Prints the output of get transition_information to console
     def print_transition_info(self, info):
         result_title = ["Total transitions: ", "Total visited states: ", "Average value of transition: ",
                         "Maximum value of transition: ", "Minimum value of transition: "]
         for i in range(len(result_title)):
-            print("{:35}".format(result_title[i], str(info[i])))
+            print("{:35}".format(result_title[i]), str(info[i]))
 
     # Save our current transition information to json file
-    def save_transition_information(self, file="data.json"):
-        with open(file, 'w') as fp:
-            json.dump({str(k): v for k, v in self.transitions.items()}, fp)
+    def save_transition_information(self, file="dataset.json"):
+        with open(file, 'w') as filePath:
+            json.dump({str(k): v for k, v in self.transitions.items()}, filePath)
 
     # Load transition info from inputted json file
+    # allows us to replicate an AI given a correctly formatted dataset
     def file_transition_info_load(self, file):
-        with open(file, 'r') as fp:
-            self.transitions = {literal_eval(k): v for k, v in json.load(fp).items()}
+        with open(file, 'r') as filePath:
+            self.transitions = {literal_eval(k): v for k, v in json.load(filePath).items()}
 
     # Look forward a inputted number of moves then return the best values associated with a move of that depth
-    def get_best_forward_looking_value(self, depth):
-        solution = float("-inf")
-        cur_state = self.get_state_with_board_spots([self.board.spots])[0]
-        for k, v in self.transitions.items():
-            if v > solution and k[0] == cur_state:
-                solution = v
-        if solution == float("-inf"):
+    # Due to complexity the AI can only look at a depth of 1.
+    def get_best_forward_looking_value(self):
+        # gets the board current state
+        currentState = self.get_state_with_board_slots([self.checkersBoard.spots])[0]
+        solution = -math.inf
+        # k short for key
+        for k, value in self.transitions.items():
+            # finding bigger values as a possible next move
+            if value > solution and k[0] == currentState:
+                solution = value
+        # There was no found best move given the current state
+        if solution == -math.inf:
             return None
         return solution
 
     # If the board exists and is legal then get the next move
     def get_next_move(self):
-        if self.pre_previous_move_state is not None:
-            cur_state = self.get_state_with_board_spots([self.board.slots])[0]
-            transition = (self.pre_previous_move_state, self.post_previous_move_state)
+        # slight optimization of looking ahead.
+        if not (self.beforeMovState is None):
+            # Get current state
+            currentState = self.get_state_with_board_slots([self.checkersBoard.slots])[0]
+            # set up transition input for self.transition and reward function.
+            transitionIndex = (self.beforeMovState, self.afterMovState)
+            # when looking for next best move may return None which will cause error in math equation
             try:
-                max_future_state = self.get_best_forward_looking_value(1)
-                self.transitions[transition] = self.transitions[transition] + self.learning_rate * (
-                        RewardFunction(transition[0], cur_state) + self.discount_factor * max_future_state -
-                        self.transitions[transition])
+                nextBestMove = self.get_best_forward_looking_value()
+                self.transitions[transitionIndex] = self.transitions[transitionIndex] + self.learningRate * (
+                        RewardFunction(transitionIndex[0], currentState) + self.discountFactor * nextBestMove -
+                        self.transitions[transitionIndex])
             except:
-                self.transitions[transition] = self.transitions[transition] + self.learning_rate * (
-                    RewardFunction(transition[0], cur_state))
-        self.pre_previous_move_state = self.get_state_with_board_spots([self.board.slots])[
+                self.transitions[transitionIndex] = self.transitions[transitionIndex] + self.learningRate * (
+                    RewardFunction(transitionIndex[0], currentState))
+        # begin process of deciding move.
+        self.beforeMovState = self.get_state_with_board_slots([self.checkersBoard.slots])[
             0]
-        possible_next_moves = self.board.get_moves_available()
-        possible_next_states = self.get_state_with_board_spots(
-            self.board.get_new_game_states(possible_next_moves))
-        self.post_previous_move_state = self.get_best_state_transition(possible_next_states)[1]
+        # Getting the new information as if we made the move
+        nextAvailableMoves = self.checkersBoard.get_moves_available()
+        nextAvailableStates = self.get_state_with_board_slots(
+                                self.checkersBoard.get_new_game_states(nextAvailableMoves))
+
+        # getting information for when a move is made
+        self.afterMovState = self.get_best_state_transition(nextAvailableStates)[1]
         considered_moves = []
-        for j in range(len(possible_next_states)):
-            if tuple(possible_next_states[j]) == self.post_previous_move_state:
-                considered_moves.append(possible_next_moves[j])
+        # loop through to determine the considered moves given a state
+        for j in range(len(nextAvailableStates)):
+            if tuple(nextAvailableStates[j]) == self.afterMovState:
+                considered_moves.append(nextAvailableMoves[j])
         return considered_moves[random.randint(0, len(considered_moves) - 1)]

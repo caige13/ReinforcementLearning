@@ -7,7 +7,7 @@ from board import CheckerBoard
 class AlphaBeta(Player):
 
     def __init__(self, id, depth, board=None):
-        self.board = board
+        self.checkersBoard = board
         self.depth = depth
         self.player_id = id
 
@@ -67,4 +67,4 @@ class AlphaBeta(Player):
             return v, possible_moves[best_move_index]
 
     def get_next_move(self):
-        return self.alpha_beta(self.board, self.depth, float('-inf'), float('inf'), self.player_id)[1]
+        return self.alpha_beta(self.checkersBoard, self.depth, float('-inf'), float('inf'), self.player_id)[1]
