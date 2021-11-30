@@ -59,7 +59,7 @@ class CheckerBoard:
 
     # Completely clears the board, leaving only empty spaces
     def board_clear(self):
-        self.slots = [[j, j, j, j] for j in
+        self.slots = [[val, val, val, val] for val in
                       [self.blankSquare] * self.H]
 
     # Restarts the checkers game to the beginning state of a checkers game.
@@ -69,6 +69,7 @@ class CheckerBoard:
     # Gets all the moves that can be made that don't require capturing an enemy piece
     def basicMoves(self, begLocation):
         if self.slots[begLocation[0]][begLocation[1]] > 2:
+            # getting basic moves
             nextLoc = self.n_possible_moves(begLocation, 1)
             nextLoc.extend(self.n_possible_moves(begLocation, 1, True))
         elif self.slots[begLocation[0]][begLocation[1]] == self.reversePlayer:
@@ -76,40 +77,45 @@ class CheckerBoard:
         else:
             nextLoc = self.n_possible_moves(begLocation, 1)
 
-        possibleNexLoc = []
+        possNextLoc = []
 
         for location in nextLoc:
+            # checking if not empty
             if len(location) != 0:
                 if self.slots[location[0]][location[1]] == self.blankSquare:
-                    possibleNexLoc.append(location)
+                    possNextLoc.append(location)
 
-        return [[begLocation, endSpot] for endSpot in possibleNexLoc]
+        return [[begLocation, end] for end in possNextLoc]
 
     # Gets possible moves diagonally forward or back 'n' number of times with no directional change midway
-    def n_possible_moves(self, begLocation, n, reverse=False):
-        if n % 2 == 0:
-            t1 = 0
+    def n_possible_moves(self, begLocation, valueN, reverse=False):
+        if valueN % 2 == 0:
+            # temporary values
             t2 = 0
+            t1 = 0
         elif begLocation[0] % 2 == 0:
-            t1 = 0
+            # temporary values
             t2 = 1
+            t1 = 0
         else:
-            t1 = 1
+            # temporary values
             t2 = 0
+            t1 = 1
 
-        solution = [[begLocation[0], begLocation[1] + math.floor(n / 2) + t1],
-                    [begLocation[0], begLocation[1] - math.floor(n / 2) - t2]]
+        solution = [[begLocation[0], begLocation[1] + math.floor(valueN / 2) + t1],
+                    [begLocation[0], begLocation[1] - math.floor(valueN / 2) - t2]]
+        # condition for reverse
         if reverse:
-            solution[0][0] = solution[0][0] - n
-            solution[1][0] = solution[1][0] - n
+            solution[1][0] -= valueN
+            solution[0][0] -= valueN
         else:
-            solution[0][0] = solution[0][0] + n
-            solution[1][0] = solution[1][0] + n
+            solution[1][0] += valueN
+            solution[0][0] += valueN
 
-        if self.is_invalid_square(solution[0]):
-            solution[0] = []
         if self.is_invalid_square(solution[1]):
             solution[1] = []
+        if self.is_invalid_square(solution[0]):
+            solution[0] = []
 
         return solution
 
@@ -120,28 +126,29 @@ class CheckerBoard:
 
         solution = []
         if self.slots[begLocation[0]][begLocation[1]] > 2:
-            n1 = self.n_possible_moves(begLocation, 1)
             n2 = self.n_possible_moves(begLocation, 2)
-            n1.extend(self.n_possible_moves(begLocation, 1, True))
             n2.extend(self.n_possible_moves(begLocation, 2, True))
-        elif self.slots[begLocation[0]][begLocation[1]] == self.reversePlayer:
-            n1 = self.n_possible_moves(begLocation, 1, True)
-            n2 = self.n_possible_moves(begLocation, 2, True)
-        else:
             n1 = self.n_possible_moves(begLocation, 1)
+            n1.extend(self.n_possible_moves(begLocation, 1, True))
+        elif self.slots[begLocation[0]][begLocation[1]] == self.reversePlayer:
+            n2 = self.n_possible_moves(begLocation, 2, True)
+            n1 = self.n_possible_moves(begLocation, 1, True)
+        else:
             n2 = self.n_possible_moves(begLocation, 2)
+            n1 = self.n_possible_moves(begLocation, 1)
 
-        for j in range(len(n1)):
-            if (not self.is_invalid_square(n2[j])) and (not self.is_invalid_square(n1[j])):
-                if self.get_info(n1[j]) != self.blankSquare and self.get_info(
-                        n1[j]) % 2 != self.get_info(begLocation) % 2:
-                    if self.get_info(n2[j]) == self.blankSquare:
-                        tm1 = copy.deepcopy(startingMoves)
-                        tm1.append(n2[j])
+        for next in range(len(n1)):
+            if (not self.is_invalid_square(n2[next])) and (not self.is_invalid_square(n1[next])):
+                if self.get_info(n1[next]) != self.blankSquare and self.get_info(
+                        n1[next]) % 2 != self.get_info(begLocation) % 2:
+                    # checking if blank space on board
+                    if self.get_info(n2[next]) == self.blankSquare:
                         answerLen = len(solution)
-                        if self.get_info(begLocation) != self.player1 or n2[j][0] != self.H - 1:
-                            if self.get_info(begLocation) != self.player2 or n2[j][0] != 0:
-                                tm_2 = [begLocation, n2[j]]
+                        tm1 = copy.deepcopy(startingMoves)
+                        tm1.append(n2[next])
+                        if self.get_info(begLocation) != self.player1 or n2[next][0] != self.H - 1:
+                            if self.get_info(begLocation) != self.player2 or n2[next][0] != 0:
+                                tm_2 = [begLocation, n2[next]]
                                 tBoard = CheckerBoard(copy.deepcopy(self.slots), self.playersTurn)
                                 tBoard.execute_move(tm_2, False)
                                 solution.extend(tBoard.jumpMoves(tm_2[1], tm1))
@@ -152,19 +159,20 @@ class CheckerBoard:
     # Get all the moves that can be made from the current state of the board
     def get_moves_available(self):
         positionOfPieces = []
-        for j in range(self.H):
-            for i in range(self.W):
-                if (self.playersTurn == True and (self.slots[j][i] == self.player1 or
-                                                    self.slots[j][i] == self.player1King)) or \
-                        (self.playersTurn == False and (self.slots[j][i] == self.player2 or
-                                                        self.slots[j][i] == self.player2King)):
-                    positionOfPieces.append([j, i])
+        for row in range(self.H):
+            for col in range(self.W):
+                if (self.playersTurn == True and (self.slots[row][col] == self.player1 or
+                                                    self.slots[row][col] == self.player1King)) or \
+                        (self.playersTurn == False and (self.slots[row][col] == self.player2 or
+                                                        self.slots[row][col] == self.player2King)):
+                    positionOfPieces.append([row, col])
 
         try:  # potentially unnecessary
             jumpMoves = list(reduce(lambda a, b: a + b, list(
                 map(self.jumpMoves, positionOfPieces))))
 
-            if len(jumpMoves) != 0:
+            #know if jump moves is more important.
+            if len(jumpMoves) > 0:
                 return jumpMoves
 
             return list(reduce(lambda a, b: a + b,
@@ -204,12 +212,15 @@ class CheckerBoard:
                 self.slots[int((move[j][0] + move[j + 1][0]) / 2)][middleY] = self.blankSquare
 
         self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.slots[move[0][0]][move[0][1]]
+        # Checking if king
         if move[len(move) - 1][0] == self.H - 1 and self.slots[move[len(move) - 1][0]][
             move[len(move) - 1][1]] == self.player1:
             self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player1King
+        # checking if king
         elif move[len(move) - 1][0] == 0 and self.slots[move[len(move) - 1][0]][
             move[len(move) - 1][1]] == self.player2:
             self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player2King
+        # not a king
         else:
             self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.slots[move[0][0]][move[0][1]]
         self.slots[move[0][0]][move[0][1]] = self.blankSquare
@@ -220,13 +231,13 @@ class CheckerBoard:
 
     # get's the symbol for the location inputted
     def get_symbol(self, loc):
-        if self.slots[loc[0]][loc[1]] == self.blankSquare:
+        if self.slots[loc[0]][loc[1]] == self.player1King:
+            return "O"
+        elif self.slots[loc[0]][loc[1]] == self.player2King:
+            return "X"
+        elif self.slots[loc[0]][loc[1]] == self.player2:
+            return "x"
+        elif self.slots[loc[0]][loc[1]] == self.blankSquare:
             return " "
         elif self.slots[loc[0]][loc[1]] == self.player1:
             return "o"
-        elif self.slots[loc[0]][loc[1]] == self.player2:
-            return "x"
-        elif self.slots[loc[0]][loc[1]] == self.player1King:
-            return "O"
-        else:
-            return "X"
