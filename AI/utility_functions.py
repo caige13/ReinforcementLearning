@@ -5,16 +5,17 @@ from board import CheckerBoard
 
 # Grabs the number of pieces and kings that each player has currently
 def GetPieces(spots, idPL=None):
+    # initialize piece count data structure as 0
     PieceCounter = {'p1_reg': 0, 'p1_king': 0, 'p2_reg': 0, 'p2_king': 0}
-    for row in spots:
-        for element in row:
-            if element == 1:
+    for boardRow in spots:
+        for pieceId in boardRow:
+            if pieceId == 1:
                 PieceCounter['p1_reg'] += 1
-            elif element == 2:
+            elif pieceId == 2:
                 PieceCounter['p2_reg'] += 1
-            elif element == 3:
+            elif pieceId == 3:
                 PieceCounter['p1_king'] += 1
-            elif element == 4:
+            elif pieceId == 4:
                 PieceCounter['p2_king'] += 1
     if idPL == False:
         return [PieceCounter['p2_reg'], PieceCounter['p2_king']]
@@ -45,9 +46,9 @@ def PlotEndGameInformation(gameResults, gamesPlayedPerRound, title="End of Game 
     plotP1Wins, = plt.plot(p1Wins, label="Player 1 is the winner!", color="blue")
     plotMoveLimitHit, = plt.plot(moveLimitHit, label="Move limit has been reached", color="red")
     plotP2Wins, = plt.plot(p2Wins, label="Player 2 is the winner!", color="orange")
-    plt.ylabel("Occurance per " + str(gamesPlayedPerRound) + " games")
-    plt.xlabel("Interval")
-    plt.legend(handles=[plotP1Wins, plotP2Wins, plotTieGames, plotMoveLimitHit])
+    plt.ylabel("game outcomes per " + str(gamesPlayedPerRound) + " played games")
+    plt.xlabel("Rounds")
+    plt.legend(handles=[plotTieGames, plotP2Wins, plotP1Wins, plotMoveLimitHit])
 
 # function rewards for transitioning from one input state to the other
 def RewardPolicy(preStateInformation, postStateInformation):
@@ -135,12 +136,16 @@ def PrintOutcome(gameResults, logParam, experimentCount, type):
     cumulativeMvs = 0
     maxMvs = -math.inf
     minMvs = math.inf
+    # get the moves
     for outcome in gameResults:
         cumulativeMvs = cumulativeMvs + outcome['move_count']
+        # get game with most move (likely move limit)
         if outcome['move_count'] > maxMvs:
             maxMvs = outcome['move_count']
+        # get game with least moves
         if outcome['move_count'] < minMvs:
             minMvs = outcome['move_count']
+        # easy way to get who won what game.
         gameWins[outcome['game_outcome']] = gameWins[outcome['game_outcome']] + 1
 
     resultTitle = ["Games Played: ", "Num. games player1 won: ", "Num. games player2 won: ",
