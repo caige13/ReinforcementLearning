@@ -44,13 +44,13 @@ class AlphaBeta(CheckersPlayer):
         if treeDepth == 0:
             pieceInformation = GetPieces(checkersBoard.slots)
             # for maxing levels of the tree
-            if pieceInformation[1] != None and pieceInformation[0] != None and pieceInformation[2] != None \
-                    and pieceInformation[3] != None:
+            if pieceInformation['p2_reg'] != None and pieceInformation['p1_reg'] != None and \
+                    pieceInformation['p1_king'] != None and pieceInformation['p2_king'] != None:
                 if checkersBoard.playersTurn == maxing:
-                    return pieceInformation[0] + 2 * pieceInformation[2] - (
-                            pieceInformation[1] + 2 * pieceInformation[3]), None
-                return pieceInformation[1] + 2 * pieceInformation[3] - (
-                        pieceInformation[0] + 2 * pieceInformation[2]), None
+                    return pieceInformation['p1_reg'] + 2 * pieceInformation['p1_king'] - (
+                            pieceInformation['p2_reg'] + 2 * pieceInformation['p2_king']), None
+                return pieceInformation['p2_reg'] + 2 * pieceInformation['p2_king'] - (
+                        pieceInformation['p1_reg'] + 2 * pieceInformation['p1_king']), None
             else:
                 print("ERROR")
                 exit(1)

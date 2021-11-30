@@ -1,3 +1,9 @@
+"""
+Caige Middaugh
+Jarod Rakoff
+Saige Wright
+"""
+
 import matplotlib.pyplot as plt
 from global_logging import file
 from alpha_beta import AlphaBeta

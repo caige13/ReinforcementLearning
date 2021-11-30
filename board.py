@@ -7,9 +7,9 @@ class CheckerBoard:
     # Creates a new Board class instance, in the starting configuration
     def __init__(self, oldSpots=None, playersTurn=True):
         self.player1 = 1
-        self.player1O = 3
+        self.player1King = 3
         self.player2 = 2
-        self.player2O = 4
+        self.player2King = 4
         self.reversePlayer = self.player2
         self.blankSquare = 0
         # Width of the board, there will only be 4 possible columns for a given row.
@@ -155,9 +155,9 @@ class CheckerBoard:
         for j in range(self.H):
             for i in range(self.W):
                 if (self.playersTurn == True and (self.slots[j][i] == self.player1 or
-                                                    self.slots[j][i] == self.player1O)) or \
+                                                    self.slots[j][i] == self.player1King)) or \
                         (self.playersTurn == False and (self.slots[j][i] == self.player2 or
-                                                        self.slots[j][i] == self.player2O)):
+                                                        self.slots[j][i] == self.player2King)):
                     positionOfPieces.append([j, i])
 
         try:  # potentially unnecessary
@@ -206,10 +206,10 @@ class CheckerBoard:
         self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.slots[move[0][0]][move[0][1]]
         if move[len(move) - 1][0] == self.H - 1 and self.slots[move[len(move) - 1][0]][
             move[len(move) - 1][1]] == self.player1:
-            self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player1O
+            self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player1King
         elif move[len(move) - 1][0] == 0 and self.slots[move[len(move) - 1][0]][
             move[len(move) - 1][1]] == self.player2:
-            self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player2O
+            self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.player2King
         else:
             self.slots[move[len(move) - 1][0]][move[len(move) - 1][1]] = self.slots[move[0][0]][move[0][1]]
         self.slots[move[0][0]][move[0][1]] = self.blankSquare
@@ -226,7 +226,7 @@ class CheckerBoard:
             return "o"
         elif self.slots[loc[0]][loc[1]] == self.player2:
             return "x"
-        elif self.slots[loc[0]][loc[1]] == self.player1O:
+        elif self.slots[loc[0]][loc[1]] == self.player1King:
             return "O"
         else:
             return "X"
