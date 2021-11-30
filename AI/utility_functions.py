@@ -3,7 +3,7 @@ from global_logging import file
 from board import CheckerBoard
 
 # function rewards for transitioning from one input state to the other
-def RewardFunction(preStateInformation, postStateInformation):
+def RewardPolicy(preStateInformation, postStateInformation):
     winReward = 14
     if postStateInformation[2] == 0 and postStateInformation[0] == 0:
         return -winReward
@@ -16,23 +16,28 @@ def RewardFunction(preStateInformation, postStateInformation):
     return intermediateReward
 
 # Grabs the number of pieces and kings that each player has currently
-# output in form [P1_pieces, P2_pieces, P1_kings, P2_kings]
 def GetPieces(spots, idPL=None):
-    PieceCounter = [0, 0, 0, 0]
+    PieceCounter = {'p1_reg': 0, 'p1_king': 0, 'p2_reg': 0, 'p2_king': 0}
     for row in spots:
         for element in row:
-            if element != 0:
-                PieceCounter[element - 1] = PieceCounter[element - 1] + 1
-    if idPL == True:
-        return [PieceCounter[0], PieceCounter[2]]
-    elif idPL == False:
-        return [PieceCounter[1], PieceCounter[3]]
+            if element == 1:
+                PieceCounter['p1_reg'] += 1
+            elif element == 2:
+                PieceCounter['p2_reg'] += 1
+            elif element == 3:
+                PieceCounter['p1_king'] += 1
+            elif element == 4:
+                PieceCounter['p2_king'] += 1
+    if idPL == False:
+        return [PieceCounter['p2_reg'], PieceCounter['p2_king']]
+    elif idPL == True:
+        return [PieceCounter['p1_reg'], PieceCounter['p1_king']]
     else:
         return PieceCounter
 
 # Plays n games of checkers, games stop after given move limit
 # outputs arrays in format of
-# [[game1_outcome, num_moves, num_own_pieces, num_opp_pieces, num_own_kings, num_opp_kings]...]
+# [[game_outcome, num_moves, num_own_pieces, num_opp_pieces, num_own_kings, num_opp_kings]...]
 def PlayNGames(p1, p2, gamesToPlay, numMoveLimitation):
     board = CheckerBoard()
     # setting up players to play on same game board
@@ -59,8 +64,8 @@ def PlayNGames(p1, p2, gamesToPlay, numMoveLimitation):
         else:
             # contain the regular pieces and king counts for both players
             PieceCount = GetPieces(board.slots)
-            if PieceCount[0] != 0 or PieceCount[2] != 0:
-                if PieceCount[1] != 0 or PieceCount[3] != 0:
+            if PieceCount['p1_reg'] != 0 or PieceCount['p1_king'] != 0:
+                if PieceCount['p2_reg'] != 0 or PieceCount['p2_king'] != 0:
                     # max move limit hit
                     if moves == numMoveLimitation:
                         gameOutcome[j][0] = 3
@@ -75,11 +80,11 @@ def PlayNGames(p1, p2, gamesToPlay, numMoveLimitation):
                 gameOutcome[j][0] = 1
 
             # Defining gameOutcome
-            gameOutcome[j][5] = PieceCount[3]
-            gameOutcome[j][2] = PieceCount[0]
+            gameOutcome[j][5] = PieceCount['p2_king']
+            gameOutcome[j][2] = PieceCount['p1_reg']
             gameOutcome[j][1] = moves
-            gameOutcome[j][4] = PieceCount[2]
-            gameOutcome[j][3] = PieceCount[1]
+            gameOutcome[j][4] = PieceCount['p1_king']
+            gameOutcome[j][3] = PieceCount['p2_reg']
 
             # do necessary resets to start new game
             p1.isGameFinished()

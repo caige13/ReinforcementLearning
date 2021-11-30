@@ -1,7 +1,7 @@
 from checkersplayer import CheckersPlayer
 import random
 import math
-from utility_functions import RewardFunction
+from utility_functions import RewardPolicy
 import json
 from ast import literal_eval
 
@@ -42,11 +42,11 @@ class QLearningAI(CheckersPlayer):
             try:
                 nextBestMove = self.get_best_forward_looking_value()
                 self.transitions[transitionIndex] = self.transitions[transitionIndex] + self.learningRate * (
-                        RewardFunction(transitionIndex[0], currentState) + self.discountFactor * nextBestMove -
+                        RewardPolicy(transitionIndex[0], currentState) + self.discountFactor * nextBestMove -
                         self.transitions[transitionIndex])
             except:
                 self.transitions[transitionIndex] = self.transitions[transitionIndex] + self.learningRate * (
-                    RewardFunction(transitionIndex[0], currentState))
+                    RewardPolicy(transitionIndex[0], currentState))
         # begin process of deciding move.
         self.beforeMovState = self.get_state_with_board_slots([self.checkersBoard.slots])[
             0]
@@ -213,7 +213,7 @@ class QLearningAI(CheckersPlayer):
         self.beforeMovState = None
         self.afterMovState = None
 
-        self.transitions[transition] = self.transitions[transition] + self.learningRate * RewardFunction(
+        self.transitions[transition] = self.transitions[transition] + self.learningRate * RewardPolicy(
             transition[0], currentState)
 
     # sets the AI's random move probability
