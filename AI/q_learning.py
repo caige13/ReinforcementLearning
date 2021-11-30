@@ -88,16 +88,16 @@ class QLearningAI(CheckersPlayer):
 
         # expected return value is to reverse the key value
         try:
-            backwordTransitions = {j: i for i, j in prevTransitions.items()}
-            return backwordTransitions.get(max(backwordTransitions))
+            backwardTransitions = {j: i for i, j in prevTransitions.items()}
+            return backwardTransitions.get(max(backwardTransitions))
         except:
             return []
 
     # grabs a tuple array from the inputted board spots -each tuple represents characteristics to define the board state
     def get_state_with_board_slots(self, boardsSlots):
-        # Format: [(own pieces, opponent's pieces, own kings, opponent's kings,
-        #           own edges, own vert center mass, opponent's vert center mass), ..]
-        pieceCount = [[0, 0, 0, 0, 0, 0, 0] for j in range(len(boardsSlots))]
+        pieceCount = [{'own_reg': 0, 'opp_reg': 0, 'own_edge_piece': 0, 'own_kings': 0,
+                       'opp_kings': 0, 'own_vert_cent_mass': 0, 'opp_vert_cent_mass': 0}
+                      for i in range(len(boardsSlots))]
 
         # for the most part the first forloop will only be ran once.
         for i in range(len(boardsSlots)):
@@ -106,37 +106,50 @@ class QLearningAI(CheckersPlayer):
                     # null checker
                     if boardsSlots[i][row][col] != 0:
                         # pieceCount is a two dimensional array
-                        pieceCount[i][boardsSlots[i][row][col] - 1] = pieceCount[i][
-                                                                          boardsSlots[i][row][col] - 1] + 1
+                        if boardsSlots[i][row][col] == 1:
+                            pieceCount[i]['own_reg'] += 1
+                        elif boardsSlots[i][row][col] == 2:
+                            pieceCount[i]['opp_reg'] += 1
+                        elif boardsSlots[i][row][col] == 3:
+                            pieceCount[i]['own_kings'] += 1
+                        elif boardsSlots[i][row][col] == 4:
+                            pieceCount[i]['opp_kings'] += 1
                         if (not self.id and (boardsSlots[i][row][col] == 2 or boardsSlots[i][row][col] == 4)) \
                                 or (self.id and (boardsSlots[i][row][col] == 1 or boardsSlots[i][row][col] == 3)):
                             if col == 0 and row % 2 == 0:
                                 # Own piece on the edge
-                                pieceCount[i][4] = pieceCount[i][4] + 1
+                                pieceCount[i]['own_edge_piece'] += 1
                             elif col == 3 and row % 2 == 1:
                                 # Own piece on the edge
-                                pieceCount[i][4] = pieceCount[i][4] + 1
+                                pieceCount[i]['own_edge_piece'] += 1
                             # update own center mass
-                            pieceCount[i][5] = pieceCount[i][5] + row
+                            pieceCount[i]['own_vert_cent_mass'] += row
                         else:
                             # update opponent's center mass
-                            pieceCount[i][6] = pieceCount[i][6] + row
+                            pieceCount[i]['opp_vert_cent_mass'] += row
 
-            if pieceCount[i][1] + pieceCount[i][3] != 0:
+            if pieceCount[i]['opp_reg'] + pieceCount[i]['opp_kings'] != 0:
                 # update opponent's center mass
-                pieceCount[i][6] = int(pieceCount[i][6] / (pieceCount[i][1] + pieceCount[i][3]))
+                pieceCount[i]['opp_vert_cent_mass'] = int(pieceCount[i]['opp_vert_cent_mass'] /
+                                                          (pieceCount[i]['opp_reg'] + pieceCount[i]['opp_kings']))
             else:
                 # update opponent's center mass
-                pieceCount[i][6] = 0
-            if pieceCount[i][0] + pieceCount[i][2] != 0:
+                pieceCount[i]['opp_vert_cent_mass'] = 0
+            if pieceCount[i]['own_reg'] + pieceCount[i]['own_kings'] != 0:
                 # update own center mass
-                pieceCount[i][5] = int(pieceCount[i][5] / (pieceCount[i][0] + pieceCount[i][2]))
+                pieceCount[i]['own_vert_cent_mass'] = int(pieceCount[i]['own_vert_cent_mass'] /
+                                                          (pieceCount[i]['own_reg'] + pieceCount[i]['own_kings']))
             else:
                 # update own center mass
-                pieceCount[i][5] = 0
+                pieceCount[i]['own_vert_cent_mass'] = 0
 
-        # convert output to tuple
-        return [tuple(counter) for counter in pieceCount]
+        # convert output to list of tuples
+        returnValue = []
+        for pieces in pieceCount:
+            returnValue.append((pieces['own_reg'], pieces['opp_reg'], pieces['own_kings'],
+                                pieces['opp_kings'], pieces['own_edge_piece'],
+                                pieces['own_vert_cent_mass'], pieces['opp_vert_cent_mass']))
+        return returnValue
 
     # sets the AI's learning rate
     def set_learning_rate(self, learningRate):
@@ -145,7 +158,7 @@ class QLearningAI(CheckersPlayer):
     # Save our current transition information to json file
     def save_transition_information(self, file="dataset.json"):
         with open(file, 'w') as filePath:
-            json.dump({str(k): v for k, v in self.transitions.items()}, filePath)
+            json.dump({str(key): value for key, value in self.transitions.items()}, filePath)
 
     # Get array of information about the dictionary self.transitions
     # in form num_transitions, num_start_of_transitions, avg_value, max_value, min_value]
@@ -158,18 +171,18 @@ class QLearningAI(CheckersPlayer):
         cumulativeValue = 0
 
         # key value iteration
-        for k, v in self.transitions.items():
+        for key, value in self.transitions.items():
             # Getting total value
-            cumulativeValue = cumulativeValue + v
+            cumulativeValue = cumulativeValue + value
             # filling in blanks
-            if begTransitions.get(k[0]) is None:
-                begTransitions.update({k[0]: 0})
+            if begTransitions.get(key[0]) is None:
+                begTransitions.update({key[0]: 0})
             # Get min value
-            if v < minValue:
-                minValue = v
+            if value < minValue:
+                minValue = value
             # Get max value
-            if v > maxValue:
-                maxValue = v
+            if value > maxValue:
+                maxValue = value
 
         return [len(self.transitions), len(begTransitions), float(cumulativeValue / len(self.transitions)),
                 maxValue,
@@ -179,7 +192,7 @@ class QLearningAI(CheckersPlayer):
     # allows us to replicate an AI given a correctly formatted dataset
     def file_transition_info_load(self, file):
         with open(file, 'r') as filePath:
-            self.transitions = {literal_eval(k): v for k, v in json.load(filePath).items()}
+            self.transitions = {literal_eval(key): value for key, value in json.load(filePath).items()}
 
     # Look forward a inputted number of moves then return the best values associated with a move of that depth
     # Due to complexity the AI can only look at a depth of 1.
