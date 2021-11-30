@@ -10,12 +10,12 @@ from alpha_beta import AlphaBeta
 from q_learning import QLearningAI
 from utility_functions import PlayNGames, PrintOutcome, PlotEndGameInformation
 
-parameters = {'learning_rate': [.001, .005], 'discount_factor': .7, 'num_train_games': [100, 200],
-              'num_train_rounds': [5, 20], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
-              'alpha_beta_depth': 2, 'move_limit': [500, 1000]}
-# parameters = {'learning_rate': [.001], 'discount_factor': .4, 'num_train_games': [100],
-#               'num_train_rounds': [5], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
-#               'alpha_beta_depth': 2, 'move_limit': [500]}
+# parameters = {'learning_rate': [.001, .005], 'discount_factor': .7, 'num_train_games': [100, 200],
+#               'num_train_rounds': [5, 20], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
+#               'alpha_beta_depth': 2, 'move_limit': [500, 1000]}
+parameters = {'learning_rate': [.001], 'discount_factor': .4, 'num_train_games': [100],
+              'num_train_rounds': [15], 'num_validation_games': 5, 'num_test_games': 5, 'random_move_chance': .1,
+              'alpha_beta_depth': 2, 'move_limit': [500]}
 
 logFile = open(file, "w")
 logFile.write("___________________________________________________________________________________________\n")
